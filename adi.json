@@ -1,0 +1,27 @@
+{
+“containerDefinitions”: [
+{
+“name”: “projectname”,
+“image”: “youraccountid.dkr.ecr.us-east-1.amazonaws.com/repositoryname:$BUILD_NUMBER”,
+“cpu”: 0,
+“portMappings”: [
+{
+“containerPort”: 8081,
+“hostPort”: 0,
+“protocol”: “tcp”
+}
+],
+“essential”: true,
+“environment”: [],
+“mountPoints”: [],
+“volumesFrom”: []
+}
+],
+“requiresCompatibilities”: [
+“FARGATE”
+],
+“family”: “projectname”,
+“networkMode”: “bridge”,
+“cpu”: “128”,
+“memory”: “512”
+}
