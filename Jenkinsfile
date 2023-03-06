@@ -52,7 +52,7 @@ stage('Docker') {
    stage('Deploy in ECS') {
   steps {
       script {
-        sh"aws ecs-deploy -r $AWS_ECR_REGION -c $AWS_ECS_CLUSTER -n $AWS_ECS_SERVICE -i ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+         ecs-deploy -r $AWS_ECR_REGION -c $AWS_ECS_CLUSTER -n $AWS_ECS_SERVICE -i ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
       }
       }
     }
