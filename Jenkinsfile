@@ -36,6 +36,7 @@ pipeline {
 stage('Docker') {
     steps {    
      script {
+          DOCKER_BUILDKIT=1
           dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}"
         }   
             }
