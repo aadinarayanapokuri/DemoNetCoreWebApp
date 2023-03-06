@@ -51,7 +51,8 @@ stage('Docker') {
    stage('Deploy in ECS') {
   steps {
       script {
-        sh "aws ecs register-task-definition –cli-input-json file://adi.json"
+        sh "aws ecs register-task-definition -–cli-input-json file://adi.json"
+        sh "aws ecs update-service –service projectname –task-definition projectname –cluster projectname –force-new-deployment –desired-count 1 –health-check-grace-period-seconds 300"
       }
       }
     }
