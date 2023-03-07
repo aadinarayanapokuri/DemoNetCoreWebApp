@@ -1,7 +1,6 @@
 pipeline {  
  agent any  
  environment {  
-  dotnet = 'C:\\Program Files\\dotnet\\dotnet.exe' 
   DATE = new Date().format('yy.M')
   AWS_ACCOUNT_ID="670166063118"
   AWS_DEFAULT_REGION="ap-northeast-1"
