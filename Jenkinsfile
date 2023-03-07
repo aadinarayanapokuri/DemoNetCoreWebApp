@@ -52,7 +52,7 @@ stage('Docker') {
    stage('Deploy in ECS') {
   steps {
       
-        sh "aws ecs update-service --cluster dotnet-application --service web-application --force-new-deployment
+        sh "aws ecs update-service --cluster dotnet-application --service web-application --force-new-deployment"
       
       }
     }
