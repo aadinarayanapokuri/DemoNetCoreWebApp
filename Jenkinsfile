@@ -3,7 +3,6 @@ pipeline {
  environment {  
   dotnet = 'C:\\Program Files\\dotnet\\dotnet.exe' 
   DATE = new Date().format('yy.M')
-  TAG = "${DATE}.${BUILD_NUMBER}"
   AWS_ACCOUNT_ID="670166063118"
   AWS_DEFAULT_REGION="ap-northeast-1"
   IMAGE_REPO_NAME="dotnetdemo"
@@ -11,13 +10,7 @@ pipeline {
   REPOSITORY_URI = "670166063118.dkr.ecr.ap-northeast-1.amazonaws.com/dotnetdemo"
   AWS_ECR_REGION = 'ap-northeast-1'
   AWS_ECS_SERVICE = 'web-application'
-  AWS_ECS_TASK_DEFINITION = 'net-application'
-  AWS_ECS_COMPATIBILITY = 'FARGATE'
-  AWS_ECS_NETWORK_MODE = 'awsvpc'
-  AWS_ECS_CPU = '256'
-  AWS_ECS_MEMORY = '512'
   AWS_ECS_CLUSTER = 'dotnet-application'
-  AWS_ECS_TASK_DEFINITION_PATH = 'adi.json'
    }  
  stages {  
  stage('Logging into AWS ECR') {
@@ -52,7 +45,7 @@ stage('Docker') {
    stage('Deploy in ECS') {
   steps {
       
-        sh "aws ecs update-service --cluster dotnet-application --service web-application --force-new-deployment"
+   sh "aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${AWS_ECS_SERVICE} --force-new-deployment"
       
       }
     }
