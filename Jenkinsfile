@@ -8,7 +8,7 @@ pipeline {
   IMAGE_TAG="${DATE}.${BUILD_NUMBER}"
   REPOSITORY_URI = "670166063118.dkr.ecr.ap-northeast-1.amazonaws.com/dotnetdemo"
   AWS_ECR_REGION = 'ap-northeast-1'
-  AWS_ECS_SERVICE = 'web-application'
+  AWS_ECS_SERVICE = 'ajay111'
   AWS_ECS_CLUSTER = 'dotnet-application'
    }  
  stages {  
