@@ -28,16 +28,19 @@ pipeline {
 stage('Docker') {
     steps {    
      script {
-          DOCKER_BUILDKIT=1
-          dockerImage = docker.build "${IMAGE_REPO_NAME}:v1"
+          //DOCKER_BUILDKIT=1
+          //dockerImage = docker.build "${IMAGE_REPO_NAME}:v1"
+          dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}"
         }   
             }
         }
   stage('Pushing to ECR') {
      steps{  
          script {
-                sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:v1"""
-                sh """docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:v1"""               
+               // sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:v1"""
+               // sh """docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:v1"""      
+                sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"""
+                sh """docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"""         
          }
         }
       }
