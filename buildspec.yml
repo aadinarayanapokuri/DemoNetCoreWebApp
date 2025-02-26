@@ -1,0 +1,55 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo "Installing dependencies..."
+      - apt-get update && apt-get install -y jq
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG"
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t $IMAGE_URI .
+
+  post_build:
+    commands:
+      - echo "Pushing Docker image to ECR..."
+      - docker push $IMAGE_URI
+      - echo "Image pushed to ECR: $IMAGE_URI"
+
+      - echo "Deploying to EC2 instance..."
+      - echo "Updating the Docker image on the EC2 instance..."
+      - aws ssm send-command \
+          --instance-ids $EC2_INSTANCE_ID \
+          --document-name "AWS-RunShellScript" \
+          --parameters '{"commands":[
+            "echo Logging in to Amazon ECR...",
+            "aws ecr get-login-password --region '"$AWS_DEFAULT_REGION"' | docker login --username AWS --password-stdin '"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"'",
+            "echo Pulling the latest Docker image...",
+            "docker pull '"$IMAGE_URI"'",
+            "echo Removing the existing container...",
+            "docker rm -f DemoNetCoreWebApp || true",
+            "echo Starting the new container...",
+            "docker run -d --name DemoNetCoreWebApp -p 80:80 '"$IMAGE_URI"'"
+          ]}'
+
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: yes
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: "us-east-1"  # Replace with your region
+    AWS_ACCOUNT_ID: "108782070046"   # Replace with your AWS account ID
+    ECR_REPO_NAME: "aws_github_poc"    # Replace with your ECR repository name
+    EC2_INSTANCE_ID: "i-022dee9e00aedc184"  # Replace with your EC2 instance ID
